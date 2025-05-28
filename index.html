@@ -222,7 +222,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* 增强的进度指示器 */
+        /* 增强的进度指示器 - 圆形数字按钮 */
         .indicators {
             position: fixed;
             bottom: 2rem;
@@ -232,19 +232,28 @@
             gap: 0.5rem;
             z-index: 1000;
             padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .indicator {
-            width: 10px;
-            height: 10px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.3);
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .indicator::after {
@@ -253,12 +262,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: -1;
         }
 
         .indicator:hover::after {
@@ -267,8 +277,10 @@
 
         .indicator.active {
             background: var(--primary);
-            transform: scale(1.3);
+            transform: scale(1.15);
             box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.8);
         }
 
         /* 增强的章节指示器 - 左上角位置，炫彩背景 */
@@ -624,7 +636,7 @@
             overflow: hidden;
             z-index: 1;
         }
-        
+
         .slide-toc::before {
             content: '';
             position: absolute;
@@ -666,10 +678,15 @@
             box-shadow: 0 2px 8px rgba(79, 172, 254, 0.4);
             animation: expandWidth 1s ease-out forwards;
         }
-        
+
         @keyframes expandWidth {
-            from { width: 0; }
-            to { width: 120px; }
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 120px;
+            }
         }
 
         .chapters-grid {
@@ -695,7 +712,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 
+            box-shadow:
                 0 4px 20px rgba(0, 0, 0, 0.08),
                 0 2px 8px rgba(0, 0, 0, 0.04),
                 inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -706,22 +723,40 @@
             justify-content: center;
             transform-origin: center bottom;
         }
-        
-        .chapter-card:nth-child(1) { animation: fadeInCard 0.5s ease-out 0.1s backwards; }
-        .chapter-card:nth-child(2) { animation: fadeInCard 0.5s ease-out 0.2s backwards; }
-        .chapter-card:nth-child(3) { animation: fadeInCard 0.5s ease-out 0.3s backwards; }
-        .chapter-card:nth-child(4) { animation: fadeInCard 0.5s ease-out 0.4s backwards; }
-        .chapter-card:nth-child(5) { animation: fadeInCard 0.5s ease-out 0.5s backwards; }
-        .chapter-card:nth-child(6) { animation: fadeInCard 0.5s ease-out 0.6s backwards; }
-        
+
+        .chapter-card:nth-child(1) {
+            animation: fadeInCard 0.5s ease-out 0.1s backwards;
+        }
+
+        .chapter-card:nth-child(2) {
+            animation: fadeInCard 0.5s ease-out 0.2s backwards;
+        }
+
+        .chapter-card:nth-child(3) {
+            animation: fadeInCard 0.5s ease-out 0.3s backwards;
+        }
+
+        .chapter-card:nth-child(4) {
+            animation: fadeInCard 0.5s ease-out 0.4s backwards;
+        }
+
+        .chapter-card:nth-child(5) {
+            animation: fadeInCard 0.5s ease-out 0.5s backwards;
+        }
+
+        .chapter-card:nth-child(6) {
+            animation: fadeInCard 0.5s ease-out 0.6s backwards;
+        }
+
         @keyframes fadeInCard {
-            from { 
-                opacity: 0; 
-                transform: translateY(20px); 
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
@@ -744,18 +779,18 @@
         .chapter-card:hover {
             transform: translateY(-8px) scale(1.02);
             background: rgba(255, 255, 255, 0.98);
-            box-shadow: 
+            box-shadow:
                 0 15px 30px rgba(0, 0, 0, 0.12),
                 0 8px 20px rgba(0, 0, 0, 0.08),
                 inset 0 1px 0 rgba(255, 255, 255, 0.8);
             border-color: rgba(37, 99, 235, 0.3);
         }
-        
+
         .chapter-card:hover .chapter-title {
             color: var(--primary);
             transform: translateY(-2px);
         }
-        
+
         .chapter-card:hover .chapter-description {
             color: #333;
         }
@@ -779,7 +814,7 @@
             position: relative;
             padding-bottom: 0.4rem;
         }
-        
+
         .chapter-title::after {
             content: '';
             position: absolute;
@@ -793,7 +828,7 @@
             opacity: 0.7;
             transition: width 0.3s ease;
         }
-        
+
         .chapter-card:hover .chapter-title::after {
             width: 60px;
         }
@@ -960,7 +995,7 @@
         }
 
         /* ========== 统一字号设置 - 参考第7页 ========== */
-/* ========== 统一字号设置 - 优化合理布局 ========== */
+        /* ========== 统一字号设置 - 优化合理布局 ========== */
         /* 页面标题调整为 1.5rem */
         .content-title {
             font-size: 1.5rem !important;
@@ -1004,6 +1039,7 @@
         .effect-label {
             font-size: 1rem !important;
         }
+
         /* ========== 第3页：项目背景与研究意义 - 独立样式 ========== */
         .slide[data-slide="3"] {
             background: #ffffff;
@@ -1097,7 +1133,7 @@
             transition: opacity 0.3s ease;
             z-index: -1;
         }
-        
+
         .slide[data-slide="3"] .glass-card::after {
             content: '';
             position: absolute;
@@ -1112,7 +1148,7 @@
             pointer-events: none;
             transition: all 0.4s ease;
         }
-        
+
         /* 左侧卡片边缘高光效果 */
         .slide[data-slide="3"] .two-column .glass-card:first-child::before {
             content: '';
@@ -1127,7 +1163,7 @@
             border-radius: 0 18px 18px 0;
             pointer-events: none;
         }
-        
+
         /* 右侧卡片边缘高光效果 */
         .slide[data-slide="3"] .two-column .glass-card:last-child::before {
             content: '';
@@ -1153,13 +1189,13 @@
             transform: perspective(1500px) rotateY(5deg) translateZ(10px);
             box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.15), -3px 3px 10px rgba(0, 0, 0, 0.08);
         }
-        
+
         /* 右侧卡片默认3D效果 */
         .slide[data-slide="3"] .two-column .glass-card:last-child {
             transform: perspective(1500px) rotateY(-5deg) translateZ(10px);
             box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.15), 3px 3px 10px rgba(0, 0, 0, 0.08);
         }
-        
+
         /* 悬停效果微调，不改变角度，只增加高度和阴影 */
         .slide[data-slide="3"] .glass-card:hover {
             transform: translateY(-5px) scale(1.02) perspective(1500px) rotateY(var(--card-rotate)) translateZ(15px);
@@ -1167,11 +1203,11 @@
             background: rgba(255, 255, 255, 0.95);
             --card-rotate: 0deg;
         }
-        
+
         .slide[data-slide="3"] .two-column .glass-card:first-child:hover {
             --card-rotate: 5deg;
         }
-        
+
         .slide[data-slide="3"] .two-column .glass-card:last-child:hover {
             --card-rotate: -5deg;
         }
@@ -1230,7 +1266,7 @@
             color: #5a67d8;
             position: relative;
             z-index: 15;
-            font-size: 1.3rem ;
+            font-size: 1.3rem;
         }
 
         .slide[data-slide="3"] .progress-bar {
@@ -1352,7 +1388,7 @@
 
         /* ========== 第4页：项目总体目标 - 紧凑布局 ========== */
         .slide[data-slide="4"] {
-background: #ffffff;
+            background: #ffffff;
             overflow: hidden;
         }
 
@@ -1404,49 +1440,49 @@ background: #ffffff;
             margin-bottom: 0.8rem;
         }
 
- .slide[data-slide="4"] .three-column {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.5rem;
-    flex: 1;
-    perspective: 1500px;
-    margin: 1.5rem 0;
-    height: 320px;
-}
+        .slide[data-slide="4"] .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            flex: 1;
+            perspective: 1500px;
+            margin: 1.5rem 0;
+            height: 320px;
+        }
 
-.slide[data-slide="4"] .glass-card {
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(12px);
-    padding: 1.8rem;
-    margin-bottom: 0;
-    border-radius: 24px;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12), 0 8px 15px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    z-index: 15;
-    transform-style: preserve-3d;
-    transform: translateY(-8px) rotateX(3deg) rotateY(-3deg);
-    height: 100%;
-    justify-content: space-between;
-}
+        .slide[data-slide="4"] .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            padding: 1.8rem;
+            margin-bottom: 0;
+            border-radius: 24px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12), 0 8px 15px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            z-index: 15;
+            transform-style: preserve-3d;
+            transform: translateY(-8px) rotateX(3deg) rotateY(-3deg);
+            height: 100%;
+            justify-content: space-between;
+        }
 
-.slide[data-slide="4"] .glass-card:hover {
-    transform: translateY(-12px) scale(1.03) rotateX(5deg) rotateY(5deg);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
-    background: rgba(255, 255, 255, 0.97);
-}
+        .slide[data-slide="4"] .glass-card:hover {
+            transform: translateY(-12px) scale(1.03) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+            background: rgba(255, 255, 255, 0.97);
+        }
 
         .slide[data-slide="4"] .glass-card:hover::before {
             opacity: 0.15;
         }
 
 
-        
+
         .slide[data-slide="4"] .glass-card::after {
             content: '';
             position: absolute;
@@ -1461,7 +1497,7 @@ background: #ffffff;
             opacity: 0.8;
             transition: transform 0.5s ease;
         }
-        
+
         .slide[data-slide="4"] .glass-card:hover::after {
             transform: scaleX(1);
         }
@@ -1479,7 +1515,7 @@ background: #ffffff;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .slide[data-slide="4"] .glass-card h3::after {
             content: '';
             flex: 1;
@@ -1523,11 +1559,11 @@ background: #ffffff;
             transform: translateZ(18px);
             text-shadow: 0 1px 3px rgba(245, 87, 108, 0.2);
         }
-        
+
         .slide[data-slide="4"] .glass-card:hover li::before {
             transform: translateX(3px) translateZ(18px);
         }
-        
+
         .slide[data-slide="4"] .glass-card::before {
             content: '';
             position: absolute;
@@ -1541,7 +1577,7 @@ background: #ffffff;
             opacity: 0.8;
             filter: blur(20px);
         }
-        
+
         .slide[data-slide="4"] .glass-card .card-decoration {
             position: absolute;
             bottom: 1rem;
@@ -1792,7 +1828,7 @@ background: #ffffff;
 
 
 
-                /* 第5.1页：项目研究内容 */
+        /* 第5.1页：项目研究内容 */
         .slide[data-slide="5.1"] {
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
         }
@@ -1814,7 +1850,7 @@ background: #ffffff;
 
         /* ========== 第6页：三维进阶设计理念 - 优化布局 ========== */
         .slide[data-slide="6"] {
-     background: #ffffff;
+            background: #ffffff;
             overflow: hidden;
         }
 
@@ -1971,7 +2007,7 @@ background: #ffffff;
             z-index: 15;
         }
 
- 
+
         /* ========== 第7页：教学策略创新 - 优化布局 ========== */
         .slide[data-slide="7"] {
             background: #ffffff;
@@ -2040,23 +2076,23 @@ background: #ffffff;
             transform: perspective(1500px) rotateY(3deg) translateZ(5px);
             box-shadow: -5px 10px 30px rgba(0, 0, 0, 0.08), -2px 3px 10px rgba(0, 0, 0, 0.05);
         }
-        
+
         /* 右侧卡片默认3D效果 */
         .slide[data-slide="7"] .dual-section .concept-card:last-child {
             transform: perspective(1500px) rotateY(-3deg) translateZ(5px);
             box-shadow: 5px 10px 30px rgba(0, 0, 0, 0.08), 2px 3px 10px rgba(0, 0, 0, 0.05);
         }
-        
+
         .slide[data-slide="7"] .concept-card:hover {
             transform: translateY(-3px) scale(1.02) perspective(1500px) rotateY(var(--card-rotate)) translateZ(10px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.08);
             --card-rotate: 0deg;
         }
-        
+
         .slide[data-slide="7"] .dual-section .concept-card:first-child:hover {
             --card-rotate: 3deg;
         }
-        
+
         .slide[data-slide="7"] .dual-section .concept-card:last-child:hover {
             --card-rotate: -3deg;
         }
@@ -2204,7 +2240,7 @@ background: #ffffff;
             transform: perspective(1200px) translateY(-3px) translateZ(8px);
             box-shadow: 0 12px 25px rgba(255, 236, 210, 0.3);
         }
-        
+
         .slide[data-slide="7"] .highlight-section .highlight-label {
             color: #d2691e;
             font-weight: 700;
@@ -2219,8 +2255,8 @@ background: #ffffff;
 
         /* ========== 第8页：核心成果展示 - 四列布局优化 ========== */
         .slide[data-slide="8"] {
-    background: #ffffff;
-                overflow: hidden;
+            background: #ffffff;
+            overflow: hidden;
         }
 
         .slide[data-slide="8"]::before {
@@ -2437,7 +2473,7 @@ background: #ffffff;
 
         /* ========== 第9页：效果评价体系 - 紧凑重构 ========== */
         .slide[data-slide="9"] {
-background: #ffffff;
+            background: #ffffff;
             overflow: hidden;
         }
 
@@ -2828,7 +2864,7 @@ background: #ffffff;
         .slide[data-slide="11"] {
             background: #ffffff;
         }
-        
+
         .slide[data-slide="11"]::before {
             content: '';
             position: absolute;
@@ -2842,7 +2878,7 @@ background: #ffffff;
             z-index: 1;
             pointer-events: none;
         }
-        
+
         .slide[data-slide="11"]::after {
             content: '';
             position: absolute;
@@ -2887,7 +2923,7 @@ background: #ffffff;
             padding-bottom: 0.25rem;
             font-size: 1.2rem;
         }
-        
+
         .slide[data-slide="11"] .content-title::after {
             content: '';
             position: absolute;
@@ -2917,7 +2953,7 @@ background: #ffffff;
             display: flex;
             flex-direction: column;
         }
-        
+
         .slide[data-slide="11"] .glass-card::before {
             content: '';
             position: absolute;
@@ -2990,7 +3026,7 @@ background: #ffffff;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border-left: 3px solid #d03030;
         }
-        
+
         .slide[data-slide="11"] .feature-box .highlight {
             background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(78, 205, 196, 0.15) 100%);
             color: #d03030;
@@ -3000,7 +3036,7 @@ background: #ffffff;
             border-left: none;
             box-shadow: none;
         }
-        
+
         /* 第11页特定样式 */
         .slide[data-slide="11"] .intro-feature-box {
             margin-bottom: 0.4rem;
@@ -3009,12 +3045,12 @@ background: #ffffff;
             font-size: 0.85rem;
             border-radius: 4px;
         }
-        
+
         .slide[data-slide="11"] .intro-feature-box .concept-lead {
             font-weight: 700;
             color: #333;
         }
-        
+
         .slide[data-slide="11"] .concept-highlight {
             background: linear-gradient(135deg, rgba(255, 107, 107, 0.3) 0%, rgba(78, 205, 196, 0.3) 100%);
             color: #d03030;
@@ -3024,7 +3060,7 @@ background: #ffffff;
             font-size: 0.78rem;
             display: inline-block;
         }
-        
+
         .slide[data-slide="11"] .innovation-title {
             color: #d03030;
             margin-bottom: 0.2rem;
@@ -3032,12 +3068,12 @@ background: #ffffff;
             font-weight: 700;
             line-height: 2;
         }
-        
+
         .slide[data-slide="11"] .innovation-desc {
             margin-bottom: 0.2rem;
             font-size: 0.8rem;
         }
-        
+
         .slide[data-slide="11"] .innovation-list {
             list-style: none;
             padding: 0;
@@ -3046,7 +3082,7 @@ background: #ffffff;
             margin-top: 0.15rem;
             flex: 1;
         }
-        
+
         .slide[data-slide="11"] .innovation-list-item {
             margin-bottom: 1rem;
             padding-left: 0.8rem;
@@ -3055,31 +3091,31 @@ background: #ffffff;
             font-weight: 500;
             line-height: 2;
         }
-        
+
         .slide[data-slide="11"] .innovation-list-item:last-child {
             margin-bottom: 0;
         }
-        
+
         .slide[data-slide="11"] .innovation-list-icon {
             position: absolute;
             left: 0;
             color: #1e9b87;
             font-size: 0.7rem;
         }
-        
+
         /* 修正：使用类选择器而不是nth-child */
         .slide[data-slide="11"] .secondary-innovation-card {
             background: rgba(247, 247, 247, 0.95);
         }
-        
+
         .slide[data-slide="11"] .secondary-innovation-card::before {
             background: linear-gradient(90deg, #4ecdc4 0%, #4ecdc4 100%);
         }
-        
+
         .slide[data-slide="11"] .secondary-innovation-card h3 {
             color: #0a6960;
         }
-        
+
         .slide[data-slide="11"] .secondary-concept-highlight {
             background: linear-gradient(135deg, rgba(78, 205, 196, 0.3) 0%, rgba(78, 205, 196, 0.3) 100%);
             color: #0a6960;
@@ -3089,22 +3125,22 @@ background: #ffffff;
             font-size: 0.78rem;
             display: inline-block;
         }
-        
+
         .slide[data-slide="11"] .secondary-innovation-card .innovation-list-icon {
             color: #0a6960;
         }
-        
+
         .slide[data-slide="11"] .column-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
-        
+
         .slide[data-slide="11"] .column-container.three-column {
             grid-template-columns: 1fr 1fr 1fr;
         }
-        
+
         .slide[data-slide="11"] .column-container:last-child {
             margin-bottom: 0;
         }
@@ -3585,7 +3621,8 @@ background: #ffffff;
                             <div class="chapter-description">内容、策略、资源、评价四个方面开展研究</div>
                         </div>
                         <div class="chapter-card">
-                            <div class="chapter-title">项目分工与预算</div>
+                            <div class="chapter-title">项目管理</div>
+                            <div class="chapter-description">项目分工与预算及预期成效</div>
                         </div>
                         <div class="chapter-card">
                             <div class="chapter-title">总结与致谢</div>
@@ -3693,8 +3730,8 @@ background: #ffffff;
                                 </ul>
                             </div>
                         </div>
-                        
-                      
+
+
 
                         <div class="stats-container">
                             <div class="stat-item">
@@ -3752,7 +3789,8 @@ background: #ffffff;
                         <div class="research-method-container" style="margin-top: 0rem; text-align: center;">
                             <div class="glass-card" style="width: 100%; margin: 0 auto; padding: 0rem;">
                                 <h3 style="margin-bottom: 0rem;">📊 研究方法体系</h3>
-                                <img src="研究方法.png" alt="研究方法体系图" style="width: 100%;height: 500px; object-fit: contain; border-radius: 8px; ">
+                                <img src="研究方法.png" alt="研究方法体系图"
+                                    style="width: 100%;height: 500px; object-fit: contain; border-radius: 8px; ">
                             </div>
                         </div>
 
@@ -3829,7 +3867,7 @@ background: #ffffff;
                         <div>
                             <h2 class="content-title">数字化教材教学策略及模式研究</h2>
                         </div>
-            
+
                         <!-- 双主线双驱动区域 -->
                         <div class="dual-section">
                             <div class="concept-card">
@@ -3840,7 +3878,7 @@ background: #ffffff;
                                     <li>基于行动导向的情境任务驱动</li>
                                 </ul>
                             </div>
-            
+
                             <div class="concept-card">
                                 <h3><span class="icon">⚡</span>双驱动对接</h3>
                                 <ul class="concept-list">
@@ -3850,25 +3888,25 @@ background: #ffffff;
                                 </ul>
                             </div>
                         </div>
-            
+
                         <!-- 三目标区域 -->
                         <div class="goals-section">
                             <div class="goal-card">
                                 <h3>🎓 认知目标</h3>
                                 <p>实现数学概念<span class="highlight">可视化理解</span></p>
                             </div>
-            
+
                             <div class="goal-card">
                                 <h3>💡 能力目标</h3>
                                 <p>培养数学建模、应用及<span class="highlight">创新能力</span></p>
                             </div>
-            
+
                             <div class="goal-card">
                                 <h3>🚀 素养目标</h3>
                                 <p>提升学生数字素养与<span class="highlight">自主学习能力</span></p>
                             </div>
                         </div>
-            
+
                         <!-- 创新亮点区域 -->
                         <div class="highlight-section">
                             <span class="highlight-label">💫 创新亮点：</span>
@@ -3912,7 +3950,8 @@ background: #ffffff;
                                 <p>《高职应用数学》初步完成，集成理论精讲、虚拟仿真、即时评测等功能模块。</p>
                                 <p><span class="highlight">特色：</span>深度融合"三维进阶"设计理念。</p>
                                 <div style="margin-top: 1rem;">
-                                    <a href="https://textbookreader.lessonplan.cn/preview.html?userId=5389a55e-3f29-a2ee-e516-531610ca8cb6&textbookId=38b19ba0-43ff-11ef-9c00-ab267b8f1719&inductionId=74c58ecc-fd1b-eb96-4ad3-4af5e8f112c4&nodeId=QpoAhFXECC" target="_blank" style="display: inline-block; padding: 0.5rem 1rem; background: var(--primary); 
+                                    <a href="https://textbookreader.lessonplan.cn/preview.html?userId=5389a55e-3f29-a2ee-e516-531610ca8cb6&textbookId=38b19ba0-43ff-11ef-9c00-ab267b8f1719&inductionId=74c58ecc-fd1b-eb96-4ad3-4af5e8f112c4&nodeId=QpoAhFXECC"
+                                        target="_blank" style="display: inline-block; padding: 0.5rem 1rem; background: var(--primary); 
                                   color: white; border-radius: 20px; text-decoration: none; 
                                   transition: all 0.3s ease;">
                                         在线预览 →
@@ -3925,7 +3964,8 @@ background: #ffffff;
                                 <p>交互式可视化高等数学虚拟实验库已建成并投入使用。</p>
                                 <p><span class="highlight">功能：</span>3D可视化实验，破解抽象认知难题。</p>
                                 <div style="margin-top: 1rem;">
-                                    <a href="https://prod-9gua1kh1e319f2a2-1327807172.tcloudbaseapp.com/" target="_blank" style="display: inline-block; padding: 0.5rem 1rem; background: var(--success); 
+                                    <a href="https://prod-9gua1kh1e319f2a2-1327807172.tcloudbaseapp.com/"
+                                        target="_blank" style="display: inline-block; padding: 0.5rem 1rem; background: var(--success); 
                                   color: white; border-radius: 20px; text-decoration: none; 
                                   transition: all 0.3s ease; margin-right: 10px;">
                                         访问平台 →
@@ -3974,7 +4014,7 @@ background: #ffffff;
 
                         <div class="feature-box">
                             <span class="highlight">核心优势：</span>基于初版教材和四大资源库，可访问体验。
-                            
+
                         </div>
                     </div>
                 </div>
@@ -3989,70 +4029,101 @@ background: #ffffff;
                         <h2 class="content-title" style="margin-bottom: 0.6rem;">数字化教材学习效果评价体系构建与实证研究</h2>
 
                         <div class="feature-box" style="margin-bottom: 1rem; background: rgba(65, 105, 225, 0.08);">
-                            依据布鲁姆教育目标分类学，围绕<span class="highlight" style="background: linear-gradient(135deg, rgba(65, 105, 225, 0.15) 0%, rgba(79, 172, 254, 0.15) 100%); color: #4169e1;">"知识-技能-思维-价值观"</span>构建多维度评价框架
+                            依据布鲁姆教育目标分类学，围绕<span class="highlight"
+                                style="background: linear-gradient(135deg, rgba(65, 105, 225, 0.15) 0%, rgba(79, 172, 254, 0.15) 100%); color: #4169e1;">"知识-技能-思维-价值观"</span>构建多维度评价框架
                         </div>
 
                         <div class="three-column" style="margin-top: 0.5rem;">
-                            <div class="glass-card" style="position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
-                                <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);"></div>
+                            <div class="glass-card"
+                                style="position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+                                <div
+                                    style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);">
+                                </div>
                                 <h3 style="color: #4169e1; margin-bottom: 0.6rem; font-size: 1.1rem;">📝 评价维度</h3>
                                 <ul style="list-style: none; padding: 0;">
                                     <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
                                         知识掌握度、技能应用能力、数学思维能力、创新能力、学习态度、数字素养
                                     </li>
-                                    <li style="padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
-                                        坚持过程性与终结性结合，注重<span class="highlight" style="background: linear-gradient(135deg, rgba(65, 105, 225, 0.15) 0%, rgba(79, 172, 254, 0.15) 100%); color: #4169e1; padding: 2px 5px; border-radius: 4px;">增值性评价</span>
+                                    <li
+                                        style="padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                        坚持过程性与终结性结合，注重<span class="highlight"
+                                            style="background: linear-gradient(135deg, rgba(65, 105, 225, 0.15) 0%, rgba(79, 172, 254, 0.15) 100%); color: #4169e1; padding: 2px 5px; border-radius: 4px;">增值性评价</span>
                                     </li>
                                 </ul>
                             </div>
-                            
-                            <div class="glass-card" style="position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
-                                <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);"></div>
+
+                            <div class="glass-card"
+                                style="position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+                                <div
+                                    style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);">
+                                </div>
                                 <h3 style="color: #4169e1; margin-bottom: 0.6rem; font-size: 1.1rem;">📈 评价方法与数据采集</h3>
                                 <ul style="list-style: none; padding: 0; font-size: 0.95rem;">
                                     <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
-                                        <strong>过程性评价：</strong> 运用<strong style="color: #4169e1;">学习分析技术</strong>，依托数字化平台自动记录的<strong style="color: #4169e1;">学习行为数据</strong>，对学情进行动态监测与分析
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                        <strong>过程性评价：</strong> 运用<strong
+                                            style="color: #4169e1;">学习分析技术</strong>，依托数字化平台自动记录的<strong
+                                            style="color: #4169e1;">学习行为数据</strong>，对学情进行动态监测与分析
                                     </li>
                                     <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
                                         <strong>准实验研究：</strong> 设置<strong style="color: #4169e1;">实验班与对照班</strong>进行干预对比
                                     </li>
-                                    <li style="padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                    <li
+                                        style="padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
                                         <strong>数据分析：</strong> 运用统计分析、对比分析等方法，对采集数据进行科学处理与解读
                                     </li>
                                 </ul>
                             </div>
-                            
-                            <div class="glass-card" style="position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
-                                <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);"></div>
+
+                            <div class="glass-card"
+                                style="position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+                                <div
+                                    style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);">
+                                </div>
                                 <h3 style="color: #4169e1; margin-bottom: 0.6rem; font-size: 1.1rem;">🔄 评价结果应用与反馈</h3>
                                 <ul style="list-style: none; padding: 0; font-size: 0.95rem;">
-                                    <li style="margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                    <li
+                                        style="margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
                                         <strong>学情反馈：</strong> 为教师提供精准学情诊断报告，辅助优化教学策略
                                     </li>
-                                    <li style="margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                    <li
+                                        style="margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
                                         <strong>个性化建议：</strong> 为学生提供个性化学习路径推荐与针对性辅导
                                     </li>
-                                    <li style="margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                    <li
+                                        style="margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
                                         <strong>教材优化：</strong> 驱动数字化教材内容、功能及资源持续迭代升级
                                     </li>
-                                    <li style="padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
-                                        <span style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
-                                        <strong>质量改进：</strong> 促进<strong style="color: #4169e1;">"教-学-评-改"数字闭环</strong>的形成与完善
+                                    <li
+                                        style="padding-left: 1.2rem; position: relative; color: #333; font-weight: 500;">
+                                        <span
+                                            style="position: absolute; left: 0; color: #4169e1; font-size: 0.75rem;">●</span>
+                                        <strong>质量改进：</strong> 促进<strong
+                                            style="color: #4169e1;">"教-学-评-改"数字闭环</strong>的形成与完善
                                     </li>
                                 </ul>
                             </div>
                         </div>
 
-                        <div class="feature-box" style="margin-top: 1rem; text-align: center; background: rgba(65, 105, 225, 0.08);">
-                            <span style="font-weight: 600;">创新点：</span>基于<span class="highlight" style="background: linear-gradient(135deg, rgba(65, 105, 225, 0.15) 0%, rgba(79, 172, 254, 0.15) 100%); color: #4169e1;">数据驱动</span>的多元化评价体系，实现教学质量持续改进
+                        <div class="feature-box"
+                            style="margin-top: 1rem; text-align: center; background: rgba(65, 105, 225, 0.08);">
+                            <span style="font-weight: 600;">创新点：</span>基于<span class="highlight"
+                                style="background: linear-gradient(135deg, rgba(65, 105, 225, 0.15) 0%, rgba(79, 172, 254, 0.15) 100%); color: #4169e1;">数据驱动</span>的多元化评价体系，实现教学质量持续改进
                         </div>
                     </div>
                 </div>
@@ -4100,15 +4171,15 @@ background: #ffffff;
                                             class="highlight">学术论文</span> 1篇 | 数字化教材 1部 | 支撑平台 3个 | 教学案例集 1套</li>
                                 </ul>
                             </div>
-                           
+
                             <div class="glass-card" style="padding: 0rem;">
                                 <h3 style="margin-bottom: 0rem;">📅 项目实施进度</h3>
                                 <img src="进度时序图.png" alt="项目进度时序图"
                                     style="max-width: 100%; max-height: 500px; object-fit: contain; border-radius: 8px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);">
                             </div>
                         </div>
-                        
-                        
+
+
                     </div>
                 </div>
             </div>
@@ -4118,7 +4189,8 @@ background: #ffffff;
                         <h2 class="content-title">项目五大创新点与特色亮点</h2>
 
                         <div class="feature-box intro-feature-box">
-                            <span class="concept-lead">理念引领：</span>以<span class="highlight concept-highlight">"三维进阶"</span>为核心，构建五个维度的创新体系
+                            <span class="concept-lead">理念引领：</span>以<span
+                                class="highlight concept-highlight">"三维进阶"</span>为核心，构建五个维度的创新体系
                         </div>
 
                         <!-- 上二下三布局 -->
@@ -4127,7 +4199,8 @@ background: #ffffff;
                             <!-- 理念创新 -->
                             <div class="glass-card">
                                 <h3 class="innovation-title">🌟 创新点一：理念创新</h3>
-                                <p class="innovation-desc"><span class="highlight concept-highlight">"三维进阶"教学设计理念</span></p>
+                                <p class="innovation-desc"><span class="highlight concept-highlight">"三维进阶"教学设计理念</span>
+                                </p>
                                 <ul class="innovation-list">
                                     <li class="innovation-list-item">
                                         <span class="innovation-list-icon">▶</span>
@@ -4139,11 +4212,12 @@ background: #ffffff;
                                     </li>
                                 </ul>
                             </div>
-                            
+
                             <!-- 内容创新 -->
                             <div class="glass-card">
                                 <h3 class="innovation-title">💡 创新点二：内容创新</h3>
-                                <p class="innovation-desc"><span class="highlight concept-highlight">产教深度融合的案例体系</span></p>
+                                <p class="innovation-desc"><span class="highlight concept-highlight">产教深度融合的案例体系</span>
+                                </p>
                                 <ul class="innovation-list">
                                     <li class="innovation-list-item">
                                         <span class="innovation-list-icon">▶</span>
@@ -4166,7 +4240,8 @@ background: #ffffff;
                             <!-- 技术创新 -->
                             <div class="glass-card">
                                 <h3 class="innovation-title">🔧 创新点三：技术创新</h3>
-                                <p class="innovation-desc"><span class="highlight concept-highlight">AI+虚拟仿真技术融合</span></p>
+                                <p class="innovation-desc"><span class="highlight concept-highlight">AI+虚拟仿真技术融合</span>
+                                </p>
                                 <ul class="innovation-list">
                                     <li class="innovation-list-item">
                                         <span class="innovation-list-icon">▶</span>
@@ -4182,11 +4257,12 @@ background: #ffffff;
                                     </li>
                                 </ul>
                             </div>
-                            
+
                             <!-- 资源创新 -->
                             <div class="glass-card secondary-innovation-card">
                                 <h3 class="innovation-title secondary-innovation-title">📚 创新点四：资源创新</h3>
-                                <p class="innovation-desc"><span class="highlight secondary-concept-highlight">立体化数字资源矩阵</span></p>
+                                <p class="innovation-desc"><span
+                                        class="highlight secondary-concept-highlight">立体化数字资源矩阵</span></p>
                                 <ul class="innovation-list">
                                     <li class="innovation-list-item">
                                         <span class="innovation-list-icon secondary-innovation-list-icon">▶</span>
@@ -4202,11 +4278,12 @@ background: #ffffff;
                                     </li>
                                 </ul>
                             </div>
-                            
+
                             <!-- 育人创新 -->
                             <div class="glass-card secondary-innovation-card">
                                 <h3 class="innovation-title secondary-innovation-title">🎓 创新点五：育人创新</h3>
-                                <p class="innovation-desc"><span class="highlight secondary-concept-highlight">三维度思政育人体系</span></p>
+                                <p class="innovation-desc"><span
+                                        class="highlight secondary-concept-highlight">三维度思政育人体系</span></p>
                                 <ul class="innovation-list">
                                     <li class="innovation-list-item">
                                         <span class="innovation-list-icon secondary-innovation-list-icon">▶</span>
@@ -4227,178 +4304,188 @@ background: #ffffff;
                 </div>
             </div>
 
-<!-- 幻灯片12：致谢 -->
-<div class="slide" data-slide="12">
-    <div class="thanks-slide-cover">
-        <!-- 装饰性SVG背景 -->
-        <svg class="thanks-decoration" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-            <!-- 主装饰圆环 -->
-            <circle cx="400" cy="300" r="180" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"
-                stroke-dasharray="10,5">
-                <animateTransform attributeName="transform" type="rotate" values="0 400 300;360 400 300" dur="20s"
-                    repeatCount="indefinite" />
-            </circle>
-            <circle cx="400" cy="300" r="150" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"
-                stroke-dasharray="5,10">
-                <animateTransform attributeName="transform" type="rotate" values="360 400 300;0 400 300" dur="15s"
-                    repeatCount="indefinite" />
-            </circle>
+            <!-- 幻灯片12：致谢 -->
+            <div class="slide" data-slide="12">
+                <div class="thanks-slide-cover">
+                    <!-- 装饰性SVG背景 -->
+                    <svg class="thanks-decoration" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 主装饰圆环 -->
+                        <circle cx="400" cy="300" r="180" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"
+                            stroke-dasharray="10,5">
+                            <animateTransform attributeName="transform" type="rotate" values="0 400 300;360 400 300"
+                                dur="20s" repeatCount="indefinite" />
+                        </circle>
+                        <circle cx="400" cy="300" r="150" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"
+                            stroke-dasharray="5,10">
+                            <animateTransform attributeName="transform" type="rotate" values="360 400 300;0 400 300"
+                                dur="15s" repeatCount="indefinite" />
+                        </circle>
 
-            <!-- 装饰星星 -->
-            <g class="stars">
-                <polygon points="100,80 105,95 120,95 108,105 113,120 100,110 87,120 92,105 80,95 95,95"
-                    fill="rgba(255,255,255,0.6)">
-                    <animateTransform attributeName="transform" type="rotate" values="0 100 80;360 100 80" dur="12s"
-                        repeatCount="indefinite" />
-                </polygon>
-                <polygon points="700,120 703,128 711,128 705,133 708,141 700,136 692,141 695,133 689,128 697,128"
-                    fill="rgba(255,255,255,0.4)">
-                    <animateTransform attributeName="transform" type="rotate" values="0 700 120;360 700 120" dur="18s"
-                        repeatCount="indefinite" />
-                </polygon>
-                <polygon points="150,480 153,488 161,488 155,493 158,501 150,496 142,501 145,493 139,488 147,488"
-                    fill="rgba(255,255,255,0.5)">
-                    <animateTransform attributeName="transform" type="rotate" values="0 150 480;360 150 480" dur="14s"
-                        repeatCount="indefinite" />
-                </polygon>
-                <polygon points="650,450 655,465 670,465 658,475 663,490 650,480 637,490 642,475 630,465 645,465"
-                    fill="rgba(255,255,255,0.3)">
-                    <animateTransform attributeName="transform" type="rotate" values="0 650 450;360 650 450" dur="16s"
-                        repeatCount="indefinite" />
-                </polygon>
-            </g>
+                        <!-- 装饰星星 -->
+                        <g class="stars">
+                            <polygon points="100,80 105,95 120,95 108,105 113,120 100,110 87,120 92,105 80,95 95,95"
+                                fill="rgba(255,255,255,0.6)">
+                                <animateTransform attributeName="transform" type="rotate" values="0 100 80;360 100 80"
+                                    dur="12s" repeatCount="indefinite" />
+                            </polygon>
+                            <polygon
+                                points="700,120 703,128 711,128 705,133 708,141 700,136 692,141 695,133 689,128 697,128"
+                                fill="rgba(255,255,255,0.4)">
+                                <animateTransform attributeName="transform" type="rotate" values="0 700 120;360 700 120"
+                                    dur="18s" repeatCount="indefinite" />
+                            </polygon>
+                            <polygon
+                                points="150,480 153,488 161,488 155,493 158,501 150,496 142,501 145,493 139,488 147,488"
+                                fill="rgba(255,255,255,0.5)">
+                                <animateTransform attributeName="transform" type="rotate" values="0 150 480;360 150 480"
+                                    dur="14s" repeatCount="indefinite" />
+                            </polygon>
+                            <polygon
+                                points="650,450 655,465 670,465 658,475 663,490 650,480 637,490 642,475 630,465 645,465"
+                                fill="rgba(255,255,255,0.3)">
+                                <animateTransform attributeName="transform" type="rotate" values="0 650 450;360 650 450"
+                                    dur="16s" repeatCount="indefinite" />
+                            </polygon>
+                        </g>
 
-            <!-- 光芒效果 -->
-            <g class="rays">
-                <line x1="400" y1="100" x2="400" y2="120" stroke="rgba(255,255,255,0.3)" stroke-width="2">
-                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite" />
-                </line>
-                <line x1="400" y1="480" x2="400" y2="500" stroke="rgba(255,255,255,0.3)" stroke-width="2">
-                    <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3s" repeatCount="indefinite" />
-                </line>
-                <line x1="200" y1="300" x2="220" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="2">
-                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite" />
-                </line>
-                <line x1="580" y1="300" x2="600" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="2">
-                    <animate attributeName="opacity" values="0.8;0.3;0.8" dur="4s" repeatCount="indefinite" />
-                </line>
-            </g>
+                        <!-- 光芒效果 -->
+                        <g class="rays">
+                            <line x1="400" y1="100" x2="400" y2="120" stroke="rgba(255,255,255,0.3)" stroke-width="2">
+                                <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s"
+                                    repeatCount="indefinite" />
+                            </line>
+                            <line x1="400" y1="480" x2="400" y2="500" stroke="rgba(255,255,255,0.3)" stroke-width="2">
+                                <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3s"
+                                    repeatCount="indefinite" />
+                            </line>
+                            <line x1="200" y1="300" x2="220" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="2">
+                                <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4s"
+                                    repeatCount="indefinite" />
+                            </line>
+                            <line x1="580" y1="300" x2="600" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="2">
+                                <animate attributeName="opacity" values="0.8;0.3;0.8" dur="4s"
+                                    repeatCount="indefinite" />
+                            </line>
+                        </g>
 
-            <!-- 几何装饰 -->
-            <g class="geometric">
-                <polygon points="320,180 340,200 320,220 300,200" fill="none" stroke="rgba(255,255,255,0.2)"
-                    stroke-width="1">
-                    <animateTransform attributeName="transform" type="rotate" values="0 320 200;360 320 200" dur="25s"
-                        repeatCount="indefinite" />
-                </polygon>
-                <polygon points="480,380 500,400 480,420 460,400" fill="none" stroke="rgba(255,255,255,0.2)"
-                    stroke-width="1">
-                    <animateTransform attributeName="transform" type="rotate" values="360 480 400;0 480 400" dur="20s"
-                        repeatCount="indefinite" />
-                </polygon>
-                <circle cx="250" cy="200" r="3" fill="rgba(255,255,255,0.4)">
-                    <animate attributeName="r" values="3;6;3" dur="5s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="550" cy="400" r="4" fill="rgba(255,255,255,0.3)">
-                    <animate attributeName="r" values="4;8;4" dur="6s" repeatCount="indefinite" />
-                </circle>
-            </g>
-        </svg>
+                        <!-- 几何装饰 -->
+                        <g class="geometric">
+                            <polygon points="320,180 340,200 320,220 300,200" fill="none" stroke="rgba(255,255,255,0.2)"
+                                stroke-width="1">
+                                <animateTransform attributeName="transform" type="rotate" values="0 320 200;360 320 200"
+                                    dur="25s" repeatCount="indefinite" />
+                            </polygon>
+                            <polygon points="480,380 500,400 480,420 460,400" fill="none" stroke="rgba(255,255,255,0.2)"
+                                stroke-width="1">
+                                <animateTransform attributeName="transform" type="rotate" values="360 480 400;0 480 400"
+                                    dur="20s" repeatCount="indefinite" />
+                            </polygon>
+                            <circle cx="250" cy="200" r="3" fill="rgba(255,255,255,0.4)">
+                                <animate attributeName="r" values="3;6;3" dur="5s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="550" cy="400" r="4" fill="rgba(255,255,255,0.3)">
+                                <animate attributeName="r" values="4;8;4" dur="6s" repeatCount="indefinite" />
+                            </circle>
+                        </g>
+                    </svg>
 
-        <!-- 学校header -->
-        <div class="school-header">
-            <div class="school-logo"></div>
-            <h2 class="school-name">西安航空职业技术学院</h2>
-        </div>
+                    <!-- 学校header -->
+                    <div class="school-header">
+                        <div class="school-logo"></div>
+                        <h2 class="school-name">西安航空职业技术学院</h2>
+                    </div>
 
-        <!-- 主标题 -->
-        <div class="thanks-main-content">
-            <h1 class="thanks-title">感谢聆听</h1>
-            <!-- SVG英文副标题 -->
-            <svg class="thanks-svg-subtitle" width="600" height="80" viewBox="0 0 600 80"
-                xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <!-- 渐变定义 -->
-                    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1">
-                            <animate attributeName="stop-color" values="#667eea;#764ba2;#f093fb;#667eea" dur="6s"
-                                repeatCount="indefinite" />
-                        </stop>
-                        <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1">
-                            <animate attributeName="stop-color" values="#764ba2;#f093fb;#667eea;#764ba2" dur="6s"
-                                repeatCount="indefinite" />
-                        </stop>
-                        <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1">
-                            <animate attributeName="stop-color" values="#f093fb;#667eea;#764ba2;#f093fb" dur="6s"
-                                repeatCount="indefinite" />
-                        </stop>
-                    </linearGradient>
+                    <!-- 主标题 -->
+                    <div class="thanks-main-content">
+                        <h1 class="thanks-title">感谢聆听</h1>
+                        <!-- SVG英文副标题 -->
+                        <svg class="thanks-svg-subtitle" width="600" height="80" viewBox="0 0 600 80"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <!-- 渐变定义 -->
+                                <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1">
+                                        <animate attributeName="stop-color" values="#667eea;#764ba2;#f093fb;#667eea"
+                                            dur="6s" repeatCount="indefinite" />
+                                    </stop>
+                                    <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1">
+                                        <animate attributeName="stop-color" values="#764ba2;#f093fb;#667eea;#764ba2"
+                                            dur="6s" repeatCount="indefinite" />
+                                    </stop>
+                                    <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1">
+                                        <animate attributeName="stop-color" values="#f093fb;#667eea;#764ba2;#f093fb"
+                                            dur="6s" repeatCount="indefinite" />
+                                    </stop>
+                                </linearGradient>
 
-                    <!-- 光晕效果 -->
-                    <filter id="glow">
-                        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                        <feMerge>
-                            <feMergeNode in="coloredBlur" />
-                            <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                    </filter>
+                                <!-- 光晕效果 -->
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
 
-                    <!-- 描边动画路径 -->
-                    <filter id="shadow">
-                        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(102, 126, 234, 0.3)" />
-                    </filter>
-                </defs>
+                                <!-- 描边动画路径 -->
+                                <filter id="shadow">
+                                    <feDropShadow dx="0" dy="2" stdDeviation="3"
+                                        flood-color="rgba(102, 126, 234, 0.3)" />
+                                </filter>
+                            </defs>
 
-                <!-- 背景装饰 -->
-                <path d="M50,40 Q150,20 250,40 T450,40 Q500,35 550,40" stroke="rgba(255,255,255,0.2)" stroke-width="1"
-                    fill="none" opacity="0.6">
-                    <animate attributeName="stroke-dasharray" values="0,1000;50,50;0,1000" dur="8s"
-                        repeatCount="indefinite" />
-                </path>
+                            <!-- 背景装饰 -->
+                            <path d="M50,40 Q150,20 250,40 T450,40 Q500,35 550,40" stroke="rgba(255,255,255,0.2)"
+                                stroke-width="1" fill="none" opacity="0.6">
+                                <animate attributeName="stroke-dasharray" values="0,1000;50,50;0,1000" dur="8s"
+                                    repeatCount="indefinite" />
+                            </path>
 
-                <!-- 主文本 -->
-                <text x="300" y="45" text-anchor="middle" font-family="Georgia, serif" font-size="20"
-                    font-style="italic" fill="url(#textGradient)" filter="url(#shadow)" font-weight="300">
-                    Thank You For Your Attention
-                    <animate attributeName="opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite" />
-                </text>
+                            <!-- 主文本 -->
+                            <text x="300" y="45" text-anchor="middle" font-family="Georgia, serif" font-size="20"
+                                font-style="italic" fill="url(#textGradient)" filter="url(#shadow)" font-weight="300">
+                                Thank You For Your Attention
+                                <animate attributeName="opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite" />
+                            </text>
 
-                <!-- 装饰元素 -->
-                <circle cx="80" cy="40" r="2" fill="rgba(255,255,255,0.6)">
-                    <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="520" cy="40" r="2" fill="rgba(255,255,255,0.6)">
-                    <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" begin="1.5s" />
-                    <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"
-                        begin="1.5s" />
-                </circle>
+                            <!-- 装饰元素 -->
+                            <circle cx="80" cy="40" r="2" fill="rgba(255,255,255,0.6)">
+                                <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="520" cy="40" r="2" fill="rgba(255,255,255,0.6)">
+                                <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite"
+                                    begin="1.5s" />
+                                <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"
+                                    begin="1.5s" />
+                            </circle>
 
-                <!-- 星星装饰 -->
-                <polygon points="120,25 122,30 127,30 123,33 125,38 120,35 115,38 117,33 113,30 118,30"
-                    fill="rgba(255,255,255,0.4)">
-                    <animateTransform attributeName="transform" type="rotate" values="0 120 31;360 120 31" dur="12s"
-                        repeatCount="indefinite" />
-                </polygon>
-                <polygon points="480,55 482,60 487,60 483,63 485,68 480,65 475,68 477,63 473,60 478,60"
-                    fill="rgba(255,255,255,0.4)">
-                    <animateTransform attributeName="transform" type="rotate" values="0 480 61;360 480 61" dur="15s"
-                        repeatCount="indefinite" />
-                </polygon>
-            </svg>
-        </div>
+                            <!-- 星星装饰 -->
+                            <polygon points="120,25 122,30 127,30 123,33 125,38 120,35 115,38 117,33 113,30 118,30"
+                                fill="rgba(255,255,255,0.4)">
+                                <animateTransform attributeName="transform" type="rotate" values="0 120 31;360 120 31"
+                                    dur="12s" repeatCount="indefinite" />
+                            </polygon>
+                            <polygon points="480,55 482,60 487,60 483,63 485,68 480,65 475,68 477,63 473,60 478,60"
+                                fill="rgba(255,255,255,0.4)">
+                                <animateTransform attributeName="transform" type="rotate" values="0 480 61;360 480 61"
+                                    dur="15s" repeatCount="indefinite" />
+                            </polygon>
+                        </svg>
+                    </div>
 
-        <!-- 底部装饰线 -->
-        <div class="thanks-bottom-decoration">
-            <svg width="300" height="20" viewBox="0 0 300 20">
-                <path d="M0,10 Q75,0 150,10 T300,10" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none">
-                    <animate attributeName="stroke-dasharray" values="0,1000;300,1000;0,1000" dur="8s"
-                        repeatCount="indefinite" />
-                </path>
-            </svg>
-        </div>
-    </div>
-</div>
+                    <!-- 底部装饰线 -->
+                    <div class="thanks-bottom-decoration">
+                        <svg width="300" height="20" viewBox="0 0 300 20">
+                            <path d="M0,10 Q75,0 150,10 T300,10" stroke="rgba(255,255,255,0.4)" stroke-width="2"
+                                fill="none">
+                                <animate attributeName="stroke-dasharray" values="0,1000;300,1000;0,1000" dur="8s"
+                                    repeatCount="indefinite" />
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- 导航控制 -->
@@ -4435,10 +4522,10 @@ background: #ffffff;
                     '项目概述 - 总体目标',
                     '研究内容总体框架',
                     '研究内容示意图',
-                    '研究内容',
-                    '研究内容',
-                    '研究内容',
-                    '研究内容',
+                    '研究内容_内容',
+                    '研究内容_策略',
+                    '研究内容_资源',
+                    '研究内容_评价',
                     '项目管理',
                     '创新特色总结',
                     '致谢'
@@ -4467,6 +4554,7 @@ background: #ffffff;
                     const indicator = document.createElement('div');
                     indicator.classList.add('indicator');
                     indicator.setAttribute('data-slide', i);
+                    indicator.textContent = i; // 添加数字序号
                     if (i === 1) indicator.classList.add('active');
                     indicator.addEventListener('click', () => this.goToSlide(i));
                     this.indicators.appendChild(indicator);
