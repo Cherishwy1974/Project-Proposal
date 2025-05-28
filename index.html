@@ -3848,15 +3848,7 @@ background: #ffffff;
                     </div>
                 </div>
             </div>
-            <!-- 幻灯片6.1：项目研究内容 -->
-            <div class="slide" data-slide="6.1">
-                <div class="slide-content">
-                    <div class="content-area">
-                        <img src="幻灯片6-detail三维.png" alt="三维进阶详细图">
-                    </div>
-                </div>
-            </div>
-
+            <!-- 幻灯片7：数字化教材教学策略及模式研究 -->
 
 
             <div class="slide" data-slide="7">
@@ -4457,7 +4449,7 @@ background: #ffffff;
         class PPTController {
             constructor() {
                 this.currentSlide = 1;
-                this.totalSlides = 14;
+                this.totalSlides = 13;
                 this.isTransitioning = false;
                 this.slideFrame = document.getElementById('slideFrame');
                 this.slides = document.querySelectorAll('.slide');
@@ -4470,19 +4462,18 @@ background: #ffffff;
                     '目录',
                     '项目概述 - 背景与意义',
                     '项目概述 - 总体目标',
+                    '研究内容总体框架',
+                    '研究内容示意图',
                     '研究内容',
                     '研究内容',
-                    '三维进阶',
-                    '三维进阶',
-                    '资源建设',
-                    '核心成果',
-                    '评价体系',
+                    '研究内容',
+                    '研究内容',
                     '项目管理',
                     '创新特色总结',
                     '致谢'
                 ];
 
-                this.noChapterInfoSlides = [1, 2, 14]; // 封面、目录和致谢页面索引
+                this.noChapterInfoSlides = [1, 2, 13]; // 封面、目录和致谢页面索引
 
                 this.init();
             }
