@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高等数学可视化微课项目</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f0f23;
+            min-height: 100vh;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 动态数学背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            z-index: -2;
+        }
+
+        /* 几何图案背景 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(45deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(-45deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(0.5deg);
+            }
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 优化头部设计 - 单行布局 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: white;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .title-section {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a8edea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2px;
+        }
+
+        .header .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            color: #e0e0e0;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+            margin-left: 20px;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 12px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-badge:hover::before {
+            left: 100%;
+        }
+
+        .stat-badge:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-number {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            color: #e0e0e0;
+        }
+
+        /* 主内容区域 - 强制三栏横向分布 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            gap: 15px;
+            flex: 1;
+            min-height: 0;
+            height: calc(100vh - 140px);
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* 简化section设计 - 确保三列布局 */
+        .section {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.3s ease;
+            min-width: 0;
+            max-width: 100%;
+            height: 100%;
+        }
+
+        .section:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(120, 219, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        /* 视频区域优化 */
+        .video-showcase {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 12px;
+        }
+
+        .video-player {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            flex: 1;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            min-height: 0;
+        }
+
+        .video-player video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .video-desc {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .video-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 3px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 18px rgba(102, 126, 234, 0.6);
+        }
+
+        .control-btn.pause {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            box-shadow: 0 3px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: auto;
+        }
+
+        /* 章节列表优化 */
+        .chapters-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .chapters-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chapters-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .chapters-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 3px;
+        }
+
+        .chapter-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid #667eea;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chapter-item:hover {
+            transform: translateX(3px);
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #ff6b6b;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chapter-number {
+            font-size: 0.7rem;
+            color: #78dbff;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .chapter-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        .chapter-count {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* 代码区域优化 */
+        .code-container {
+            flex: 1;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 0;
+        }
+
+        .code-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .code-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .code-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 3px;
+        }
+
+        .code-line {
+            display: flex;
+            margin-bottom: 1px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            transition: background 0.2s;
+        }
+
+        .code-line:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 3px;
+        }
+
+        .line-number {
+            color: #6a737d;
+            width: 30px;
+            text-align: right;
+            margin-right: 12px;
+            user-select: none;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+
+        .code-content {
+            color: #e6e6e6;
+            flex: 1;
+            white-space: pre;
+        }
+
+        /* 语法高亮 */
+        .keyword {
+            color: #ff79c6;
+            font-weight: 500;
+        }
+
+        .string {
+            color: #f1fa8c;
+        }
+
+        .comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .function {
+            color: #50fa7b;
+            font-weight: 500;
+        }
+
+        .number {
+            color: #bd93f9;
+        }
+
+        .class-name {
+            color: #8be9fd;
+            font-weight: 500;
+        }
+
+        /* 响应式设计 - 保持三列布局 */
+        @media (max-width: 1400px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .header .subtitle {
+                font-size: 0.8rem;
+            }
+
+            .stat-badge {
+                min-width: 65px;
+                padding: 6px 10px;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 10px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 12px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 8px;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            .code-line {
+                font-size: 0.75rem;
+            }
+
+            .chapter-item {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .stats-container {
+                margin-left: 0;
+                justify-content: center;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 6px;
+                height: calc(100vh - 160px);
+            }
+
+            .section {
+                padding: 12px;
+            }
+        }
+
+        /* 只有在极小屏幕才改为单列 */
+        @media (max-width: 480px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                gap: 10px;
+                height: auto;
+                overflow-y: auto;
+            }
+
+            .section {
+                height: auto;
+                min-height: 300px;
+            }
+        }
+
+        /* 进入动画 */
+        .section {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 优化后的头部设计 - 单行布局 -->
+        <div class="header">
+            <div class="title-section">
+                <h1>📚 高等数学可视化微课项目</h1>
+                <p class="subtitle">基于Python Manim库的完整高等数学教学视频体系</p>
+            </div>
+            <div class="stats-container">
+                <div class="stat-badge">
+                    <span class="stat-number">13</span>
+                    <span class="stat-label">章节</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="stat-number">126</span>
+                    <span class="stat-label">视频</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="stat-number">Python</span>
+                    <span class="stat-label">语言</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="stat-number">Manim</span>
+                    <span class="stat-label">引擎</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- 视频展示区域 -->
+            <div class="section">
+                <h2 class="section-title">🎬 视频展示</h2>
+                <div class="video-showcase">
+                    <div class="video-player">
+                        <video id="mainVideo" controls preload="metadata">
+                            <source src="CyMCnl97.mp4" type="video/mp4">
+                            您的浏览器不支持HTML5视频
+                        </video>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">🧮 导数</div>
+                        <div class="video-desc">通过动态可视化方式呈现导函数的几何意义。</div>
+                        <div class="video-controls">
+                            <button class="control-btn" onclick="switchVideo(0)">示例1</button>
+                            <button class="control-btn" onclick="switchVideo(1)">示例2</button>
+                            <button class="control-btn pause" onclick="pauseVideo()">暂停</button>
+                            <div class="volume-control">
+                                <span>🔊</span>
+                                <span>20%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 章节目录区域 -->
+            <div class="section">
+                <h2 class="section-title">📖 课程章节</h2>
+                <div class="chapters-list">
+                    <div class="chapter-item" style="border-left-color: #ff6b6b;">
+                        <div class="chapter-number">第1章 • 微分篇</div>
+                        <div class="chapter-title">代数与函数</div>
+                        <div class="chapter-count">8个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第2章 • 微分篇</div>
+                        <div class="chapter-title">极限与连续</div>
+                        <div class="chapter-count">12个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第3章 • 微分篇</div>
+                        <div class="chapter-title">导数与微分</div>
+                        <div class="chapter-count">15个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第4章 • 微分篇</div>
+                        <div class="chapter-title">导数的应用</div>
+                        <div class="chapter-count">10个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第5章 • 积分篇</div>
+                        <div class="chapter-title">不定积分</div>
+                        <div class="chapter-count">9个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第6章 • 积分篇</div>
+                        <div class="chapter-title">定积分及其应用</div>
+                        <div class="chapter-count">11个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第7章 • 积分篇</div>
+                        <div class="chapter-title">常微分方程</div>
+                        <div class="chapter-count">8个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第8章 • 多元微积分篇</div>
+                        <div class="chapter-title">多元函数微分学</div>
+                        <div class="chapter-count">12个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第9章 • 多元微积分篇</div>
+                        <div class="chapter-title">多元函数积分学初步</div>
+                        <div class="chapter-count">7个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第10章 • 代数篇</div>
+                        <div class="chapter-title">线性代数初步</div>
+                        <div class="chapter-count">10个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第11章 • 代数篇</div>
+                        <div class="chapter-title">无穷级数</div>
+                        <div class="chapter-count">9个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第12章 • 空间几何篇</div>
+                        <div class="chapter-title">向量代数与空间解析几何</div>
+                        <div class="chapter-count">11个视频</div>
+                    </div>
+                    <div class="chapter-item">
+                        <div class="chapter-number">第13章 • 概率统计篇</div>
+                        <div class="chapter-title">概率论与数理统计初步</div>
+                        <div class="chapter-count">14个视频</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 代码展示区域 -->
+            <div class="section">
+                <h2 class="section-title">💻 核心代码</h2>
+                <div class="code-container">
+                    <div class="code-line">
+                        <span class="line-number">1</span>
+                        <span class="code-content"><span class="keyword">from</span> <span
+                                class="class-name">manim</span> <span class="keyword">import</span> *</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">2</span>
+                        <span class="code-content"></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">3</span>
+                        <span class="code-content"><span class="keyword">class</span> <span
+                                class="class-name">DerivativeVisualization</span>(<span
+                                class="class-name">Scene</span>):</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">4</span>
+                        <span class="code-content"> <span class="keyword">def</span> <span
+                                class="function">construct</span>(<span class="keyword">self</span>):</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">5</span>
+                        <span class="code-content"> <span class="comment"># 设置场景</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">6</span>
+                        <span class="code-content"> <span class="keyword">self</span>.camera.background_color = <span
+                                class="class-name">WHITE</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">7</span>
+                        <span class="code-content"></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">8</span>
+                        <span class="code-content"> <span class="comment"># 创建函数图像</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">9</span>
+                        <span class="code-content"> axes = <span class="class-name">Axes</span>(</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">10</span>
+                        <span class="code-content"> x_range=[-<span class="number">3</span>, <span
+                                class="number">3</span>, <span class="number">1</span>],</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">11</span>
+                        <span class="code-content"> y_range=[-<span class="number">2</span>, <span
+                                class="number">4</span>, <span class="number">1</span>],</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">12</span>
+                        <span class="code-content"> axis_config={<span class="string">"color"</span>: <span
+                                class="class-name">BLUE</span>}</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">13</span>
+                        <span class="code-content"> )</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">14</span>
+                        <span class="code-content"></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">15</span>
+                        <span class="code-content"> <span class="comment"># 定义函数</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">16</span>
+                        <span class="code-content"> <span class="keyword">def</span> <span
+                                class="function">func</span>(x):</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">17</span>
+                        <span class="code-content"> <span class="keyword">return</span> x**<span class="number">2</span>
+                            - <span class="number">1</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">18</span>
+                        <span class="code-content"></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">19</span>
+                        <span class="code-content"> <span class="comment"># 绘制函数图像</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">20</span>
+                        <span class="code-content"> graph = axes.plot(func, color=<span
+                                class="class-name">RED</span>)</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">21</span>
+                        <span class="code-content"></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">22</span>
+                        <span class="code-content"> <span class="comment"># 动态切线演示</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">23</span>
+                        <span class="code-content"> x_val = <span class="class-name">ValueTracker</span>(<span
+                                class="number">1</span>)</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">24</span>
+                        <span class="code-content"></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">25</span>
+                        <span class="code-content"> <span class="comment"># 创建切点</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">26</span>
+                        <span class="code-content"> dot = <span class="class-name">Dot</span>(color=<span
+                                class="class-name">YELLOW</span>)</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">27</span>
+                        <span class="code-content"> dot.add_updater(</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">28</span>
+                        <span class="code-content"> <span class="keyword">lambda</span> m: m.move_to(</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">29</span>
+                        <span class="code-content"> axes.c2p(x_val.get_value(), func(x_val.get_value()))</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">30</span>
+                        <span class="code-content"> )</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">31</span>
+                        <span class="code-content"> )</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">32</span>
+                        <span class="code-content"></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">33</span>
+                        <span class="code-content"> <span class="comment"># 动画序列</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">34</span>
+                        <span class="code-content"> <span class="keyword">self</span>.play(<span
+                                class="class-name">Create</span>(axes), <span
+                                class="class-name">Create</span>(graph))</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">35</span>
+                        <span class="code-content"> <span class="keyword">self</span>.play(<span
+                                class="class-name">FadeIn</span>(dot))</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">36</span>
+                        <span class="code-content"> <span class="keyword">self</span>.play(</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">37</span>
+                        <span class="code-content"> x_val.animate.set_value(<span class="number">2</span>),</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">38</span>
+                        <span class="code-content"> run_time=<span class="number">3</span></span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">39</span>
+                        <span class="code-content"> )</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-number">40</span>
+                        <span class="code-content"> <span class="keyword">self</span>.wait(<span
+                                class="number">2</span>)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 视频数据
+        const videos = [
+            {
+                title: "🧮 导数",
+                desc: "通过动态可视化展示导数作为切线斜率的几何意义，帮助学生直观理解微分学的核心概念。",
+                src: "CyMCnl97.mp4"
+            },
+            {
+                title: "📈 不定积分",
+                desc: "通过动画演示函数的不定积分的直观理解，展示原函数与导数之间的关系。",
+                src: "krYdXwm4.mp4"
+            }
+        ];
+
+        let currentVideo = 0;
+
+        function switchVideo(index) {
+            currentVideo = index;
+            const videoInfo = document.querySelector('.video-info');
+            const titleEl = videoInfo.querySelector('.video-title');
+            const descEl = videoInfo.querySelector('.video-desc');
+
+            titleEl.textContent = videos[index].title;
+            descEl.textContent = videos[index].desc;
+
+            // 更新视频源
+            const video = document.getElementById('mainVideo');
+            video.pause();
+            video.querySelector('source').src = videos[index].src;
+            video.load();
+            video.play();
+
+            // 设置音量为20%
+            video.volume = 0.2;
+
+            console.log(`切换到视频 ${index + 1}: ${videos[index].title}`);
+        }
+
+        // 章节点击事件
+        document.querySelectorAll('.chapter-item').forEach((item, index) => {
+            item.addEventListener('click', function () {
+                // 移除其他高亮
+                document.querySelectorAll('.chapter-item').forEach(ch => ch.style.borderLeftColor = '#667eea');
+                // 高亮当前章节
+                this.style.borderLeftColor = '#ff6b6b';
+
+                console.log(`选中第${index + 1}章节`);
+            });
+        });
+
+        // 暂停视频功能
+        function pauseVideo() {
+            const video = document.getElementById('mainVideo');
+            const btn = document.querySelector('.control-btn.pause');
+            if (video) {
+                if (video.paused) {
+                    video.play();
+                    btn.textContent = '继续';
+                } else {
+                    video.pause();
+                    btn.textContent = '暂停';
+                }
+            }
+        }
+
+        // 页面加载完成后设置默认视频
+        document.addEventListener('DOMContentLoaded', function () {
+            const video = document.getElementById('mainVideo');
+            if (video) {
+                video.volume = 0.2; // 设置音量为20%
+            }
+            console.log('高等数学可视化微课项目展示页面加载完成');
+        });
+    </script>
+</body>
+
+</html>
