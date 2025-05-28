@@ -691,7 +691,7 @@
 
         .chapters-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             grid-template-rows: repeat(2, 1fr);
             gap: 1.8rem;
             flex: 1;
@@ -699,6 +699,29 @@
             max-width: 1200px;
             margin: 0 auto;
             animation: fadeInUp 0.8s ease-out;
+        }
+        
+        /* 调整目录布局为上三下二 */
+        .chapter-card:nth-child(1),
+        .chapter-card:nth-child(2),
+        .chapter-card:nth-child(3) {
+            grid-column: span 2; /* 上面三个卡片，每个占2列 */
+        }
+        
+        .chapter-card:nth-child(4),
+        .chapter-card:nth-child(5) {
+            grid-column: span 3; /* 下面两个卡片，每个占3列 */
+        }
+        
+        /* 确保第二行卡片居中对齐 */
+        .chapter-card:nth-child(4) {
+            grid-column-start: 1;
+            grid-column-end: 4;
+        }
+        
+        .chapter-card:nth-child(5) {
+            grid-column-start: 4;
+            grid-column-end: 7;
         }
 
         /* 现代化目录卡片 */
