@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3836.7979736328125" height="2886.0205078125" viewBox="0 0 3836.7979736328125 2886.0205078125" fill="none">
+<g filter="url(#filter_0A206E03-5DEC-4FF1-B8FF-D799292B00C1)">
+<ellipse cx="2624.9523315429688" cy="932.839172363281" transform="rotate(65.63730641088179 1699.544189453125 0)" rx="925.408142089844" ry="932.839172363281"   fill="#3AC0FF" >
+</ellipse>
+</g>
+<g filter="url(#filter_E62FEFE4-B118-4220-88DF-5E3E15EBAAE1)">
+<ellipse cx="4599.650817871094" cy="1799.945007324219" transform="rotate(115.89225045220572 3648.4864501953125 967.826171875)" rx="951.164367675781" ry="832.118835449219"   fill="#1536FF" >
+</ellipse>
+</g>
+<g filter="url(#filter_BACD42CE-FECA-4251-A077-87954784A6C1)">
+<ellipse cx="2541.146453857422" cy="886.0176696777344" transform="rotate(28.30267878912611 2290.288818359375 624.6240234375)" rx="250.8576354980469" ry="261.3936462402344"   fill="#ABC3FF" >
+</ellipse>
+</g>
+<g filter="url(#filter_B0E1687E-A907-49A8-83A1-F422315BB3AE)">
+<ellipse cx="2693.2450256347656" cy="1810.061508178711" transform="rotate(28.30267878912611 2484.543701171875 1592.5947265625)" rx="208.7013244628906" ry="217.46678161621094"   fill="#80A4FF" >
+</ellipse>
+</g>
+<g filter="url(#filter_0C3557BB-C61C-4F51-A385-7E6CC95A7574)">
+<ellipse cx="1563.1932678222656" cy="1683.6402893066406" transform="rotate(65.63730641088179 1231.513671875 1351.23046875)" rx="331.6795959472656" ry="332.4098205566406"   fill="#A9EDE3" >
+</ellipse>
+</g>
+<defs>
+<filter id="filter_0A206E03-5DEC-4FF1-B8FF-D799292B00C1" x="59.70416259765625" y="60.9072265625" width="2343.6185913085938" height="2333.80517578125" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feGaussianBlur result="gaussian_blur_0A206E03-5DEC-4FF1-B8FF-D799292B00C1" stdDeviation="120"/>
+</filter>
+<filter id="filter_E62FEFE4-B118-4220-88DF-5E3E15EBAAE1" x="1132.2894897460938" y="34.2587890625" width="2704.5084838867188" height="2851.76171875" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feGaussianBlur result="gaussian_blur_E62FEFE4-B118-4220-88DF-5E3E15EBAAE1" stdDeviation="248"/>
+</filter>
+<filter id="filter_BACD42CE-FECA-4251-A077-87954784A6C1" x="1637.913818359375" y="218.591796875" width="1498.6190185546875" height="1510.2333984375" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feGaussianBlur result="gaussian_blur_BACD42CE-FECA-4251-A077-87954784A6C1" stdDeviation="248"/>
+</filter>
+<filter id="filter_B0E1687E-A907-49A8-83A1-F422315BB3AE" x="1858.4473876953125" y="1171.443359375" width="1413.482177734375" height="1423.14501953125" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feGaussianBlur result="gaussian_blur_B0E1687E-A907-49A8-83A1-F422315BB3AE" stdDeviation="248"/>
+</filter>
+<filter id="filter_0C3557BB-C61C-4F51-A385-7E6CC95A7574" x="413.1582946777344" y="1138.6123046875" width="1304.7348937988281" height="1303.77099609375" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feGaussianBlur result="gaussian_blur_0C3557BB-C61C-4F51-A385-7E6CC95A7574" stdDeviation="160"/>
+</filter>
+</defs>
+</svg>

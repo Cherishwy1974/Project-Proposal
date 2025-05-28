@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek API数学教学系统展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* 上半部分：代码编辑器 */
+        .top-panel {
+            width: 50%;
+            height: 100vh;
+            background: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid #333;
+            overflow: auto;
+        }
+
+        /* 下半部分：教学平台 */
+        .bottom-panel {
+            width: 50%;
+            height: 100vh;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+        }
+
+        /* VS Code 风格的代码编辑器 */
+        .code-editor {
+            flex: 1;
+            background: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .code-title-bar {
+            background: #323233;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            border-bottom: 1px solid #444;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .close {
+            background: #ff5f56;
+        }
+
+        .minimize {
+            background: #ffbd2e;
+        }
+
+        .maximize {
+            background: #27ca3f;
+        }
+
+        .file-info {
+            color: #cccccc;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-tabs {
+            background: #2d2d30;
+            display: flex;
+            align-items: center;
+            height: 35px;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .code-tab {
+            padding: 0 20px;
+            height: 100%;
+            background: #2d2d30;
+            color: #cccccc;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            border-right: 1px solid #3e3e42;
+        }
+
+        .code-tab.active {
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+
+        .code-content {
+            flex: 1;
+            padding: 15px;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            overflow-y: auto;
+            overflow-x: auto;
+            white-space: nowrap;
+            background: #1e1e1e;
+        }
+
+        .line-numbers {
+            display: inline-block;
+            width: 35px;
+            color: #858585;
+            text-align: right;
+            margin-right: 15px;
+            user-select: none;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 1px;
+            min-height: 18px;
+        }
+
+        /* 语法高亮 */
+        .keyword {
+            color: #569cd6;
+        }
+
+        .function {
+            color: #dcdcaa;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .number {
+            color: #b5cea8;
+        }
+
+        .comment {
+            color: #6a9955;
+        }
+
+        .property {
+            color: #9cdcfe;
+        }
+
+        .constant {
+            color: #4ec9b0;
+        }
+
+        /* 数学教学平台界面 */
+        .math-platform {
+            flex: 1;
+            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .platform-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+        }
+
+        .platform-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4facfe;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .platform-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-item {
+            background: #4facfe;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: #0078d4;
+            transform: translateY(-1px);
+        }
+
+        .nav-item.ai-active {
+            background: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .platform-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .question-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            width: 35%;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: #4facfe;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .question-title {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .math-formula {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.4em;
+            font-family: 'Times New Roman', serif;
+            margin: 15px 0;
+            border: 2px dashed #dee2e6;
+            color: #333;
+            white-space: nowrap;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .student-input {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .ai-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            flex: 1;
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #17a2b8, #007bff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .ai-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #17a2b8;
+        }
+
+        .ai-status {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: auto;
+        }
+
+        .ai-response {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .step-container {
+            margin: 15px 0;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-item {
+            margin: 10px 0;
+            padding: 12px;
+            background: rgba(23, 162, 184, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #17a2b8;
+        }
+
+        .formula-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2em;
+            margin: 10px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .final-answer {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="video-container">
+        <div class="controls">
+            <button class="btn" onclick="location.href='3版max.html'" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">↩️ 返回</button>
+            <button class="btn" onclick="toggleHighlight()">💡 高亮</button>
+            <button class="btn" onclick="switchTab()">🔄 切换</button>
+        </div>
+
+        <!-- 上半部分：VS Code 代码编辑器 -->
+        <div class="top-panel">
+            <div class="code-editor">
+                <div class="code-title-bar">
+                    <div class="window-controls">
+                        <div class="control-btn close"></div>
+                        <div class="control-btn minimize"></div>
+                        <div class="control-btn maximize"></div>
+                    </div>
+                    <div class="file-info">
+                        <span>📁</span>
+                        <span>/math/assets/js/definite-integral-scripts.js</span>
+                        <span style="color: #28a745;">●</span>
+                    </div>
+                </div>
+
+                <div class="code-tabs">
+                    <button class="code-tab active">
+                        <span style="color: #f1c40f;">⚡</span>
+                        definite-integral-scripts.js
+                    </button>
+                    <button class="code-tab">
+                        <span style="color: #e74c3c;">⚙️</span>
+                        deepseek-config.json
+                    </button>
+                </div>
+
+                <div class="code-content">
+                    <div class="code-line">
+                        <span class="line-numbers">1908</span>
+                        <span class="keyword">async function</span> <span class="function">askDeepSeek</span><span
+                            class="property">(fullContext)</span> <span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1909</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1910</span>
+                        &nbsp;&nbsp;<span class="comment">// 构建强化系统提示，确保AI始终围绕当前主题</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1911</span>
+                        &nbsp;&nbsp;<span class="keyword">const</span> <span class="property">requestBody</span> =
+                        <span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1912</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">model</span>: <span
+                            class="constant">DEEPSEEK_CONFIG.MODEL</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1913</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">messages</span>: <span>[</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1914</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>{</span>
+                    </div>
+                    <div class="code-line" style="background-color: #2d2d2d; padding: 5px 10px; border-radius: 4px; margin: 2px 0;">
+                        <span class="line-numbers" style="color: #858585; font-size: 14px; min-width: 40px; display: inline-block; text-align: right; margin-right: 10px;">1915</span>
+                        <span style="color: #e0e0e0; font-size: 15px; font-family: 'Consolas', monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="property" style="color: #9cdcfe; font-size: 15px; font-weight: bold;">role</span><span style="color: #e0e0e0; font-size: 15px;">: </span><span class="string" style="color: #ce9178; font-size: 15px;">"system"</span><span style="color: #e0e0e0; font-size: 15px;">,</span>
+                    </div>
+                    <div class="code-line" style="background-color: #2d2d2d; padding: 5px 10px; border-radius: 4px; margin: 2px 0;">
+                        <span class="line-numbers" style="color: #858585; font-size: 14px; min-width: 40px; display: inline-block; text-align: right; margin-right: 10px;">1916</span>
+                        <span style="color: #e0e0e0; font-size: 15px; font-family: 'Consolas', monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="property" style="color: #9cdcfe; font-size: 15px; font-weight: bold;">content</span><span style="color: #e0e0e0; font-size: 15px;">: </span><span class="string" style="color: #ce9178; font-size: 15px;">`你是一个专注的定积分助手。遵循下规则：</span>
+                    </div>
+                    <div class="code-line" style="background-color: #2d2d2d; padding: 5px 10px; border-radius: 4px; margin: 2px 0;">
+                        <span class="line-numbers" style="color: #858585; font-size: 14px; min-width: 40px; display: inline-block; text-align: right; margin-right: 10px;">1917</span>
+                        <span class="string" style="color: #ce9178; font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.
+                            严格围绕当前上下文(题目或知识点)回答问题，无论用户提什么问题；</span>
+                    </div>
+                    <div class="code-line" style="background-color: #2d2d2d; padding: 5px 10px; border-radius: 4px; margin: 2px 0;">
+                        <span class="line-numbers" style="color: #858585; font-size: 14px; min-width: 40px; display: inline-block; text-align: right; margin-right: 10px;">1918</span>
+                        <span class="string" style="color: #ce9178; font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.
+                            使用准确的LaTeX公式格式并必须正确使用双美元符号$$包装。例如：</span>
+                    </div>
+                    <div class="code-line" style="background-color: #2d2d2d; padding: 5px 10px; border-radius: 4px; margin: 2px 0;">
+                        <span class="line-numbers" style="color: #858585; font-size: 14px; min-width: 40px; display: inline-block; text-align: right; margin-right: 10px;">1919</span>
+                        <span class="string" style="color: #ce9178; font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定积分:
+                            $\\int_{a}^{b} f(x) dx$或#$$\\int_{a}^{b} f(x) dx$$</span>
+                    </div>
+                    <div class="code-line" style="background-color: #2d2d2d; padding: 5px 10px; border-radius: 4px; margin: 2px 0;">
+                        <span class="line-numbers" style="color: #858585; font-size: 14px; min-width: 40px; display: inline-block; text-align: right; margin-right: 10px;">1920</span>
+                        <span class="string" style="color: #ce9178; font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不定积分: $\\int
+                            f(x) dx$或#$$\\int f(x) dx$$</span>
+                    </div>
+                    <div class="code-line" style="background-color: #2d2d2d; padding: 5px 10px; border-radius: 4px; margin: 2px 0;">
+                        <span class="line-numbers" style="color: #858585; font-size: 14px; min-width: 40px; display: inline-block; text-align: right; margin-right: 10px;">1921</span>
+                        <span class="string" style="color: #ce9178; font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.
+                            总是以用户当前所看的内容为基础进行回答，遇到无关问题，不要脱离上下文；</span>
+                    </div>
+                    <div class="code-line" style="background-color: #2d2d2d; padding: 5px 10px; border-radius: 4px; margin: 2px 0;">
+                        <span class="line-numbers" style="color: #858585; font-size: 14px; min-width: 40px; display: inline-block; text-align: right; margin-right: 10px;">1922</span>
+                        <span class="string" style="color: #ce9178; font-size: 15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. 复杂公式推导时使用清晰的步骤展示`</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1923</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>},</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1924</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1925</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">role</span>: <span
+                            class="string">"user"</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1926</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">content</span>: <span
+                            class="property">fullContext</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1927</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>}</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1928</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span>],</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1929</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">temperature</span>: <span
+                            class="number">0.3</span>, <span class="comment">// 降低温度确保更准确的回答</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1930</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">max_tokens</span>: <span
+                            class="number">1500</span> <span class="comment">// 允许更详细的回答</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1931</span>
+                        &nbsp;&nbsp;<span>};</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1932</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1933</span>
+                        &nbsp;&nbsp;<span class="keyword">try</span> <span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1934</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span
+                            class="property">response</span> = <span class="keyword">await</span> <span
+                            class="function">fetch</span><span>(</span><span
+                            class="constant">DEEPSEEK_CONFIG.API_URL</span>, <span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1935</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">method</span>: <span
+                            class="string">'POST'</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1936</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">headers</span>: <span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1937</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'Content-Type'</span>:
+                        <span class="string">'application/json'</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1938</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'Authorization'</span>:
+                        <span class="string">`Bearer ${</span><span class="constant">DEEPSEEK_CONFIG.API_KEY</span><span
+                            class="string">}`</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1939</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>},</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1940</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="property">body</span>: <span
+                            class="function">JSON.stringify</span><span>(</span><span
+                            class="property">requestBody</span><span>)</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1941</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span>});</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1942</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span class="property">data</span> =
+                        <span class="keyword">await</span> <span class="property">response</span>.<span
+                            class="function">json</span>();
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1943</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span
+                            class="property">data</span>.<span class="property">choices</span>[<span
+                            class="number">0</span>].<span class="property">message</span>.<span
+                            class="property">content</span>;
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1944</span>
+                        &nbsp;&nbsp;<span>} <span class="keyword">catch</span> <span>(</span><span
+                                class="property">error</span><span>) {</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1945</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">console.error</span>(<span
+                            class="string">'DeepSeek API调用失败:'</span>, <span class="property">error</span>);
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1946</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span
+                            class="string">'抱歉，AI助手暂时无法响应。'</span>;
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1947</span>
+                        &nbsp;&nbsp;<span>}</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">1948</span>
+                        <span>}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 下半部分：数学教学平台 -->
+        <div class="bottom-panel">
+            <div class="math-platform">
+                <div class="platform-header">
+                    <div class="platform-title">
+                        <span>📐</span>
+                        定积分知识点堂
+                    </div>
+                    <div class="platform-nav">
+                        <a href="#" class="nav-item">习题</a>
+                        <a href="#" class="nav-item ai-active">AI 助手</a>
+                        <a href="#" class="nav-item">区间加性</a>
+                    </div>
+                </div>
+
+                <div class="platform-content">
+                    <div class="question-section">
+                        <div class="question-header">
+                            <div class="question-number">1</div>
+                            <div class="question-title">基本定积分计算</div>
+                        </div>
+
+                        <div class="math-formula">
+                            求 ∫₀¹ (2x + 3)dx
+                        </div>
+
+                        <div class="input-container" style="margin-top: 15px; display: flex; width: 100%;">
+                            <input type="text" id="userInput" value="进一步解释" class="explain-input" style="flex-grow: 1; padding: 10px 15px; border: 1px solid #ddd; border-radius: 20px 0 0 20px; outline: none;">
+                            <button class="send-btn" id="explainBtn" style="padding: 0 20px; background: #4caf50; color: white; border: none; border-radius: 0 20px 20px 0; cursor: pointer; transition: background 0.3s;">
+                                发送
+                            </button>
+                        </div>
+
+                        <div
+                            style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 8px; border-left: 3px solid #2196f3;">
+                            <small style="color: #1976d2;"><strong>提示：</strong>这是一个基本的定积分计算题，需要先求出不定积分，再计算定积分值。</small>
+                        </div>
+                    </div>
+
+                    <div class="ai-section">
+                        <div class="ai-thinking" id="aiThinking" style="display: none; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #4caf50;">
+                            <div style="font-weight: bold; color: #2e7d32; margin-bottom: 10px;">AI思考过程：</div>
+                            <div id="thinkingProcess" style="margin-bottom: 10px; max-height: 200px; overflow-y: auto;"></div>
+                            <div style="font-weight: bold; color: #1565c0; margin: 10px 0 5px 0;">解题过程和答案：</div>
+                            <div id="finalAnswer"></div>
+                        </div>
+                        <div class="ai-header">
+                            <div class="ai-avatar">AI</div>
+                            <div class="ai-name">DeepSeek数学助手</div>
+                            <div class="ai-status">正在解答</div>
+                        </div>
+
+                        <div class="ai-response" id="aiResponse" style="display: none;">
+                            <!-- 这部分内容将在思考过程结束后由JavaScript动态添加 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleHighlight() {
+            const important = document.querySelectorAll('.string, .function, .constant');
+            important.forEach(el => {
+                el.style.backgroundColor = el.style.backgroundColor ? '' : '#444';
+            });
+        }
+
+        function switchTab() {
+            const tabs = document.querySelectorAll('.code-tab');
+            const activeTab = document.querySelector('.code-tab.active');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            if (activeTab === tabs[0]) {
+                tabs[1].classList.add('active');
+                // 切换到配置文件内容
+                document.querySelector('.code-content').innerHTML = `
+                    <div class="code-line">
+                        <span class="line-numbers">1</span>
+                        <span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">2</span>
+                        &nbsp;&nbsp;<span class="property">"DEEPSEEK_CONFIG"</span>: <span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">3</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">"MODEL"</span>: <span class="string">"deepseek-chat"</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">4</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">"API_URL"</span>: <span class="string">"https://api.deepseek.com/chat/completions"</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">5</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">"API_KEY"</span>: <span class="string">"sk-xxxxxxxxxxxxxxxxxxxxxxxx"</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">6</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">"TEMPERATURE"</span>: <span class="number">0.3</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">7</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">"MAX_TOKENS"</span>: <span class="number">1500</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">8</span>
+                        &nbsp;&nbsp;<span>},</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">9</span>
+                        &nbsp;&nbsp;<span class="property">"PROMPTS"</span>: <span>{</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">10</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">"SYSTEM_ROLE"</span>: <span class="string">"专注定积分助手"</span>,
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">11</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="property">"LATEX_FORMAT"</span>: <span class="string">"使用$$包装数学公式"</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">12</span>
+                        &nbsp;&nbsp;<span>}</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="line-numbers">13</span>
+                        <span>}</span>
+                    </div>
+                `;
+            } else {
+                location.reload(); // 重新加载显示原代码
+            }
+        }
+
+        // 发送按钮点击事件
+        document.getElementById('explainBtn').addEventListener('click', function() {
+            const aiThinking = document.getElementById('aiThinking');
+            const thinkingProcess = document.getElementById('thinkingProcess');
+            const finalAnswer = document.getElementById('finalAnswer');
+            const userInput = document.getElementById('userInput');
+            const explainBtn = this;
+            
+            // 显示思考过程区域
+            aiThinking.style.display = 'block';
+            explainBtn.disabled = true;
+            userInput.disabled = true;
+            
+            // 清空之前的内容
+            thinkingProcess.innerHTML = '';
+            finalAnswer.innerHTML = '';
+            
+            // 定义思考步骤 - 只显示思考中的状态
+            const thinkingSteps = [
+                '正在分析题目...',
+                '理解定积分的概念...',
+                '分析函数 f(x) = 2x + 3 的特点...',
+                '考虑积分的线性性质...',
+                '应用积分公式...',
+                '计算中...',
+                '检查结果...',
+                '思考完成！正在整理答案...'
+            ];
+            
+            // 定义AI助手的回复 - 这部分在思考结束后显示
+            const aiResponse = `
+                <div style="padding: 15px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #4caf50;">
+                    <div style="font-weight: bold; color: #2e7d32; margin-bottom: 10px; font-size: 1.1em;">
+                        DeepSeek数学助手
+                    </div>
+                    <div style="margin-bottom: 15px; line-height: 1.6;">
+                        让我们详细分解这个定积分的计算过程：
+                    </div>
+                    <ol style="margin-left: 15px; margin-bottom: 15px;">
+                        <li style="margin-bottom: 10px;">
+                            <strong>首先理解题目：</strong>计算函数 f(x) = 2x + 3 在区间 [0, 1] 上的定积分 $$\int_{0}^{1} (2x + 3)dx$$
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>计算不定积分（即求原函数）：</strong><br>
+                            根据积分线性性质，可以分开计算：<br>
+                            $$\int(2x + 3)dx = 2\int xdx + 3\int 1dx$$
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>应用基本积分公式：</strong><br>
+                            $$\int xdx = \frac{x^2}{2} + C$$<br>
+                            $$\int 1dx = x + C$$
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>合并结果：</strong><br>
+                            $$2 \cdot \frac{x^2}{2} + 3x + C = x^2 + 3x + C$$
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>计算定积分：</strong><br>
+                            根据定积分的定义：F(b) - F(a)<br>
+                            $$[x^2 + 3x]_{0}^{1} = (1^2 + 3\cdot1) - (0^2 + 3\cdot0) = 4 - 0 = 4$$
+                        </li>
+                    </ol>
+                    <div style="margin: 15px 0; padding: 10px; background: #e8f5e9; border-radius: 5px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                            <span style="margin-right: 8px; font-size: 1.2em;">💡</span>
+                            <strong style="color: #1b5e20;">最终答案：4</strong>
+                        </div>
+                        <div style="color: #2e7d32; font-size: 0.9em;">
+                            这个结果表示函数 f(x) = 2x + 3 在区间 [0, 1] 上与x轴围成的面积为4个单位。
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 显示思考过程 - 只显示思考中的状态
+            let currentStep = 0;
+            const showThinkingProcess = () => {
+                if (currentStep < thinkingSteps.length) {
+                    // 清空之前的内容，只显示当前状态
+                    thinkingProcess.innerHTML = `
+                        <div style="padding: 12px; background: #f0f7ff; border-radius: 6px; border-left: 3px solid #2196f3;">
+                            <div style="font-weight: bold; color: #0d47a1; margin-bottom: 8px;">AI思考中...</div>
+                            <div style="color: #1976d2;">${thinkingSteps[currentStep]}</div>
+                        </div>
+                    `;
+                    currentStep++;
+                    setTimeout(showThinkingProcess, 800);
+                } else {
+                    // 思考过程结束，显示最终答案
+                    showFinalAnswer();
+                }
+            };
+            
+            // 显示最终答案
+            const showFinalAnswer = () => {
+                // 完全隐藏思考过程区域
+                document.getElementById('aiThinking').style.display = 'none';
+                
+                // 显示页面上的解题步骤
+                document.getElementById('aiResponse').innerHTML = `
+                    <div class="step-title">让我们详细分解这个定积分的计算过程：</div>
+
+                    <div class="step-container">
+                        <div class="step-item">
+                            <strong>1. 首先理解题目：</strong>计算函数 f(x) = 2x + 3 在区间 [0, 1] 上的定积分 ∫₀¹ (2x + 3)dx
+                        </div>
+
+                        <div class="step-item">
+                            <strong>2. 计算不定积分（即求原函数）：</strong><br>
+                            根据积分线性性质，可以分开计算：
+                            <div class="formula-display">
+                                ∫(2x + 3)dx = 2∫xdx + 3∫1dx
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <strong>3. 应用基本积分公式：</strong>
+                            <div class="formula-display">
+                                ∫xdx = x²/2 + C<br>
+                                ∫1dx = x + C
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <strong>4. 合并结果：</strong>
+                            <div class="formula-display">
+                                2 · x²/2 + 3x + C = x² + 3x + C
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <strong>5. 计算定积分：</strong><br>
+                            根据定积分的定义：F(b) - F(a)
+                            <div class="formula-display">
+                                [x² + 3x]₀¹ = (1² + 3·1) - (0² + 3·0) = 4 - 0 = 4
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="final-answer">
+                        <div style="font-size: 1.2em;">💡 最终答案：4</div>
+                        <div style="margin-top: 8px; font-size: 0.9em; opacity: 0.9;">
+                            这个结果表示函数 f(x) = 2x + 3 在区间 [0, 1] 上与x轴围成的面积为4个单位。
+                        </div>
+                    </div>
+                `;
+                document.getElementById('aiResponse').style.display = 'block';
+                
+                // 渲染数学公式
+                if (window.MathJax) {
+                    MathJax.typeset();
+                }
+                
+                // 重置输入框和按钮
+                userInput.value = '';
+                userInput.placeholder = '输入您的问题...';
+                userInput.disabled = false;
+                explainBtn.disabled = false;
+                userInput.focus();
+            };
+            
+            // 开始显示思考过程
+            showThinkingProcess();
+        });
+        
+        // 按回车键发送
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('explainBtn').click();
+            }
+        });
+
+        // 添加一些动态效果
+        document.addEventListener('DOMContentLoaded', () => {
+            // AI助手状态变化
+            const aiStatus = document.querySelector('.ai-status');
+            const statuses = ['正在解答', '分析中', '计算中', '生成答案'];
+            let statusIndex = 0;
+
+            setInterval(() => {
+                aiStatus.textContent = statuses[statusIndex];
+                statusIndex = (statusIndex + 1) % statuses.length;
+            }, 2000);
+        });
+    </script>
+</body>
+
+</html>
